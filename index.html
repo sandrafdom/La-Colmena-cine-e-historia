@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Colmena — Cine e Historia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:       #F5F0E8;
+    --parchment:   #EDE5D4;
+    --ink:         #1A1612;
+    --sepia:       #2C2018;
+    --sepia-mid:   #3D2E20;
+    --warm-gray:   #6B6258;
+    --light-warm:  #9E9489;
+    --gold:        #A8894A;
+    --gold-light:  #C4A96A;
+    --gold-pale:   #DFC99A;
+    --honey:       #D4920A;
+    --honey-bright:#E8A812;
+    --off-white:   #FAF7F2;
+    --border-s:    rgba(42,32,24,0.11);
+    --border-m:    rgba(42,32,24,0.22);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); color:var(--ink); font-family:'Source Sans 3',sans-serif; font-weight:300; line-height:1.78; overflow-x:hidden; }
+
+  /* FILMSTRIP */
+  .filmstrip { width:100%; height:26px; background:var(--sepia); position:relative; overflow:hidden; }
+  .filmstrip::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent 0,transparent 16px,rgba(245,240,232,0.18) 16px,rgba(245,240,232,0.18) 26px,transparent 26px,transparent 42px); }
+
+  /* NAV */
+  nav { background:var(--sepia); height:68px; padding:0 3.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:200; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .nav-brand { text-decoration:none; display:flex; flex-direction:column; gap:1px; }
+  .nav-brand-name { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; color:var(--gold-light); letter-spacing:0.05em; line-height:1; }
+  .nav-brand-name::before { content:'⬡ '; font-size:0.85rem; opacity:0.7; }
+  .nav-brand-sub { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.78rem; color:rgba(255,255,255,0.32); letter-spacing:0.09em; }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a { color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.73rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:400; transition:color .22s; }
+  .nav-links a:hover { color:var(--gold-pale); }
+
+  /* HERO */
+  .hero { background:var(--sepia); min-height:94vh; display:grid; grid-template-columns:55% 45%; position:relative; overflow:hidden; }
+  .hero-hc { position:absolute; right:-40px; top:50%; transform:translateY(-50%); width:560px; opacity:0.18; pointer-events:none; z-index:0; }
+  .hero-left { padding:7rem 4rem 7rem 5.5rem; position:relative; z-index:1; display:flex; flex-direction:column; justify-content:center; }
+  .hero-kicker { display:flex; align-items:center; gap:0.8rem; font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:2rem; }
+  .hero-kicker-line { display:block; width:2rem; height:1px; background:var(--gold); }
+  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(3.2rem,6vw,5.5rem); line-height:0.95; font-weight:700; color:var(--off-white); margin-bottom:0.6rem; letter-spacing:-0.01em; }
+  .hero-title-sub { font-family:'Cormorant Garamond',serif; font-size:clamp(1.1rem,2vw,1.6rem); font-style:italic; font-weight:300; color:var(--gold-light); letter-spacing:0.06em; margin-bottom:3.5rem; display:block; }
+  .hero-cta { display:inline-flex; align-items:center; gap:0.8rem; border:1px solid var(--gold); color:var(--gold-light); padding:0.9rem 2.2rem; font-size:0.73rem; letter-spacing:0.13em; text-transform:uppercase; text-decoration:none; transition:background .28s,color .28s; align-self:flex-start; font-family:'Source Sans 3',sans-serif; font-weight:600; }
+  .hero-cta:hover { background:var(--gold); color:var(--sepia); }
+  .hero-cta-arr { transition:transform .28s; }
+  .hero-cta:hover .hero-cta-arr { transform:translateX(5px); }
+  .hero-right { position:relative; overflow:hidden; min-height:94vh; }
+  .hero-stamp { position:absolute; left:2rem; top:50%; transform:translateY(-50%) rotate(-90deg); font-size:0.62rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.12); white-space:nowrap; z-index:2; transform-origin:center center; }
+  .hero-img-wrap { position:absolute; inset:0; }
+  .hero-img-fade { position:absolute; inset:0; background:linear-gradient(to right,var(--sepia) 0%,rgba(44,32,24,0.3) 50%,transparent 100%); }
+  .hero-quote-box { position:absolute; bottom:3.5rem; right:2.5rem; max-width:295px; text-align:right; z-index:2; border-right:2px solid var(--honey); padding-right:1.25rem; }
+  .hero-quote-box blockquote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; color:rgba(255,255,255,0.65); line-height:1.58; margin-bottom:0.6rem; }
+  .hero-quote-box cite { font-size:0.63rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--honey-bright); font-style:normal; }
+
+  /* IDENTITY BAND */
+  .identity-band { background:var(--honey); padding:0.9rem 3.5rem; display:flex; align-items:center; gap:3rem; overflow:hidden; }
+  .identity-band-item { font-size:0.67rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--sepia); font-weight:600; white-space:nowrap; display:flex; align-items:center; gap:0.6rem; }
+  .identity-band-item::before { content:'⬡'; font-size:0.7rem; opacity:0.55; }
+  .identity-dot { width:3px; height:3px; border-radius:50%; background:var(--sepia); opacity:0.3; flex-shrink:0; }
+
+  /* SECTIONS */
+  section { padding:6rem 0; }
+  .inner { max-width:1180px; margin:0 auto; padding:0 3.5rem; }
+  .sec-head { display:flex; align-items:baseline; gap:1.5rem; margin-bottom:3.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border-s); }
+  .sec-label { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); font-weight:600; white-space:nowrap; }
+  .sec-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.5rem); font-weight:600; color:var(--sepia); line-height:1.2; }
+
+  /* ABOUT */
+  .about-sec { background:var(--parchment); border-top:1px solid var(--border-s); border-bottom:1px solid var(--border-s); }
+  .about-grid { display:grid; grid-template-columns:340px 1fr; gap:5rem; align-items:start; }
+  .about-photo-wrap { position:relative; }
+  .about-photo-frame { background:var(--sepia); padding:6px; display:inline-block; width:100%; }
+  .about-photo-frame img { width:100%; display:block; aspect-ratio:4/5; object-fit:cover; filter:sepia(45%) contrast(1.1) brightness(0.88); }
+  .about-photo-caption { margin-top:0.85rem; font-size:0.72rem; color:var(--warm-gray); font-style:italic; text-align:center; line-height:1.5; }
+  .about-photo-wrap .hc-deco { position:absolute; right:-18px; bottom:-18px; opacity:0.1; pointer-events:none; }
+  .about-text h2 { font-family:'Playfair Display',serif; font-size:clamp(1.6rem,2.5vw,2.2rem); font-weight:600; color:var(--sepia); margin-bottom:0.35rem; line-height:1.15; }
+  .about-sub { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; color:var(--gold); margin-bottom:2rem; }
+  .about-text p { font-size:1rem; color:var(--warm-gray); margin-bottom:1.4rem; line-height:1.88; }
+  .about-text p strong { color:var(--sepia); font-weight:600; }
+  .about-text p em { font-style:italic; }
+  .author-sig { margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border-s); display:flex; align-items:center; gap:1rem; }
+  .author-sig-line { flex:1; height:1px; background:var(--border-m); }
+  .author-sig-text { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.92rem; color:var(--warm-gray); white-space:nowrap; }
+  .author-sig-text strong { color:var(--sepia); font-style:normal; font-weight:600; font-size:0.95rem; }
+
+  /* ARTICLES */
+  .articles-sec { background:var(--off-white); }
+  .articles-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); border:1px solid var(--border-s); }
+  .art-card { display:block; text-decoration:none; color:inherit; border-right:1px solid var(--border-s); transition:background .28s; cursor:pointer; }
+  .art-card:last-child { border-right:none; }
+  .art-card:hover { background:var(--parchment); }
+  .art-card-img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; filter:sepia(22%) contrast(1.06); transition:filter .38s; }
+  .art-card:hover .art-card-img { filter:sepia(5%) contrast(1.04); }
+  .art-card-body { padding:2rem 2rem 2.25rem; }
+  .art-meta { display:flex; align-items:center; gap:1rem; margin-bottom:0.9rem; }
+  .art-cat { font-size:0.62rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); font-weight:600; }
+  .art-year { font-size:0.72rem; color:var(--light-warm); }
+  .art-card h3 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:600; color:var(--sepia); line-height:1.3; margin-bottom:0.6rem; }
+  .art-film { display:block; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.97rem; color:var(--gold); margin-bottom:1rem; }
+  .art-card p { font-size:0.9rem; color:var(--warm-gray); line-height:1.72; margin-bottom:1.4rem; }
+  .art-more { font-size:0.68rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--sepia); font-weight:600; display:flex; align-items:center; gap:0.45rem; }
+  .art-more-arr { transition:transform .22s; }
+  .art-card:hover .art-more-arr { transform:translateX(4px); }
+
+  /* MANIFESTO */
+  .manifesto-sec { background:var(--sepia); }
+  .manifesto-inner { max-width:840px; margin:0 auto; padding:0 3.5rem; text-align:center; }
+  .manifesto-kicker { font-size:0.65rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--honey-bright); font-weight:600; margin-bottom:2.5rem; display:flex; align-items:center; justify-content:center; gap:1rem; }
+  .manifesto-kicker::before, .manifesto-kicker::after { content:''; display:block; width:2rem; height:1px; background:var(--honey); }
+  .manifesto-body { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.35rem,2.5vw,1.85rem); color:rgba(255,255,255,0.78); line-height:1.7; margin-bottom:2rem; }
+  .manifesto-body strong { color:var(--honey-bright); font-style:normal; font-weight:600; }
+  .manifesto-footer { font-size:0.75rem; letter-spacing:0.08em; color:rgba(255,255,255,0.22); padding-top:2.5rem; border-top:1px solid rgba(255,255,255,0.07); font-style:italic; line-height:1.7; }
+
+  /* ARTICLE PAGES */
+  .art-page { display:none; background:var(--off-white); min-height:100vh; padding:5rem 0 9rem; }
+  .art-page.active { display:block; }
+  .art-inner { max-width:800px; margin:0 auto; padding:0 2rem; }
+  .back-btn { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--warm-gray); background:none; border:none; cursor:pointer; margin-bottom:3rem; transition:color .2s; font-family:'Source Sans 3',sans-serif; font-weight:600; }
+  .back-btn:hover { color:var(--sepia); }
+  .art-hdr { margin-bottom:3rem; padding-bottom:2.5rem; border-bottom:1px solid var(--border-s); }
+  .art-hdr-cat { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:1.2rem; display:flex; align-items:center; gap:0.75rem; }
+  .art-hdr-cat::before { content:''; width:1.5rem; height:1px; background:var(--gold); display:block; }
+  .art-hdr h1 { font-family:'Playfair Display',serif; font-size:clamp(1.9rem,4vw,3rem); font-weight:700; color:var(--sepia); line-height:1.12; margin-bottom:1rem; }
+  .art-hdr-film { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.12rem; color:var(--gold); }
+  .art-hero-img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; margin:2.5rem 0 0; filter:sepia(18%) contrast(1.06); }
+  .art-img-cap { font-size:0.76rem; color:var(--light-warm); font-style:italic; text-align:center; padding:0.6rem 0 2.5rem; line-height:1.5; }
+  .info-box { background:var(--sepia); padding:2rem 2.5rem; margin:0.5rem 0 3rem; }
+  .info-box h4 { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--honey-bright); font-weight:600; margin-bottom:1.1rem; }
+  .info-box ul { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:0.45rem 2.5rem; }
+  .info-box li { font-size:0.87rem; color:rgba(255,255,255,0.68); display:flex; gap:0.75rem; }
+  .info-box li strong { color:rgba(255,255,255,0.35); font-weight:300; min-width:85px; }
+  .art-body h2 { font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:600; color:var(--sepia); margin:3.5rem 0 1.2rem; padding-top:0.5rem; }
+  .art-body p { font-size:1.03rem; color:#3A3028; line-height:1.9; margin-bottom:1.6rem; font-weight:300; }
+  .art-body strong { font-weight:600; color:var(--sepia); }
+  .art-body em { font-style:italic; }
+  .pull { border-left:3px solid var(--honey); padding:1.5rem 2rem; margin:3.5rem 0; background:var(--parchment); position:relative; }
+  .pull::before { content:'❝'; position:absolute; top:-0.5rem; left:1.5rem; font-size:2.5rem; color:var(--honey); opacity:0.2; font-family:serif; line-height:1; }
+  .pull blockquote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.3rem; color:var(--sepia); line-height:1.55; }
+  .pull cite { display:block; margin-top:0.8rem; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--honey); font-style:normal; }
+  .stills { display:grid; grid-template-columns:2fr 1fr 1fr; gap:4px; margin:3rem 0; }
+  .still { position:relative; overflow:hidden; background:var(--sepia-mid); min-height:160px; display:flex; align-items:center; justify-content:center; }
+  .still img { width:100%; height:100%; object-fit:cover; filter:sepia(28%) contrast(1.08); transition:filter .4s,transform .4s; display:block; }
+  .still:hover img { filter:sepia(5%) contrast(1.04); transform:scale(1.03); }
+  .still-label { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(26,22,18,0.82)); padding:1.5rem 0.8rem 0.6rem; opacity:0; transition:opacity .3s; }
+  .still:hover .still-label { opacity:1; }
+  .still-label span { font-size:0.7rem; color:rgba(255,255,255,0.82); font-style:italic; }
+  .still-ph { font-size:0.75rem; color:rgba(196,169,106,0.3); font-style:italic; text-align:center; padding:1rem; line-height:1.5; }
+  .stills-cap { font-size:0.76rem; color:var(--light-warm); font-style:italic; text-align:center; margin-top:0.4rem; line-height:1.5; margin-bottom:3rem; }
+  .in-progress { border:1px dashed var(--border-m); padding:2rem; text-align:center; margin:3rem 0; background:var(--parchment); }
+  .in-progress p { font-size:0.87rem; color:var(--warm-gray); font-style:italic; margin:0; line-height:1.6; }
+  .fig-full { margin:3rem 0; }
+  .fig-full-inner { background:var(--sepia); aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .fig-full-inner img { width:100%; height:100%; object-fit:cover; filter:sepia(30%) contrast(1.1); display:block; }
+  .fig-ph { font-family:'Cormorant Garamond',serif; font-style:italic; color:rgba(196,169,106,0.35); text-align:center; padding:2rem; font-size:1.05rem; line-height:1.7; }
+  .fig-cap { font-size:0.76rem; color:var(--light-warm); font-style:italic; padding-top:0.6rem; line-height:1.55; }
+  .art-sig { margin-top:4rem; padding-top:2rem; border-top:1px solid var(--border-s); display:flex; align-items:center; justify-content:flex-end; gap:1.2rem; }
+  .art-sig-label { font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--light-warm); }
+  .art-sig-name { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--warm-gray); }
+  .art-sig-name strong { color:var(--sepia); font-weight:600; font-style:normal; }
+
+  /* FOOTER */
+  footer { background:var(--ink); padding:2.75rem 3.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+  .footer-brand { display:flex; flex-direction:column; gap:3px; }
+  .footer-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--gold-light); letter-spacing:0.05em; }
+  .footer-name::before { content:'⬡ '; font-size:0.8rem; opacity:0.6; }
+  .footer-tagline { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.8rem; color:rgba(255,255,255,0.25); }
+  .footer-right { text-align:right; }
+  .footer-sig { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.88rem; color:rgba(255,255,255,0.38); line-height:1.6; }
+  .footer-sig strong { color:rgba(255,255,255,0.55); font-style:normal; }
+  .footer-note { font-size:0.68rem; color:rgba(255,255,255,0.18); margin-top:0.25rem; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+  .hero-kicker    { animation:fadeUp .7s .1s  ease both; }
+  .hero-title     { animation:fadeUp .7s .22s ease both; }
+  .hero-title-sub { animation:fadeUp .7s .32s ease both; }
+  .hero-cta       { animation:fadeUp .7s .42s ease both; }
+
+  /* RESPONSIVE */
+  @media (max-width:900px){
+    nav{padding:0 1.5rem;} .nav-links{display:none;}
+    .hero{grid-template-columns:1fr;} .hero-right{display:none;}
+    .hero-left{padding:4.5rem 1.75rem;}
+    .inner{padding:0 1.5rem;}
+    .about-grid{grid-template-columns:1fr;gap:2.5rem;}
+    .articles-grid{grid-template-columns:1fr;}
+    .art-card{border-right:none;border-bottom:1px solid var(--border-s);}
+    .info-box ul{grid-template-columns:1fr;}
+    .stills{grid-template-columns:1fr 1fr;}
+    .stills .still:first-child{grid-column:1/-1;}
+    .identity-band{gap:1.5rem;overflow-x:auto;}
+    .manifesto-inner{padding:0 1.5rem;}
+    footer{flex-direction:column;} .footer-right{text-align:left;}
+    .author-sig{flex-direction:column;align-items:flex-start;gap:0.5rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="filmstrip"></div>
+
+<nav>
+  <a class="nav-brand" href="#" onclick="showHome();return false;">
+    <span class="nav-brand-name">La Colmena</span>
+    <span class="nav-brand-sub">Cine e Historia</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="goTo('articulos');return false;">Artículos</a></li>
+    <li><a href="#" onclick="goTo('sobre-el-proyecto');return false;">El proyecto</a></li>
+    <li><a href="#" onclick="goTo('manifiesto');return false;">Manifiesto</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════ HOMEPAGE ═══════════ -->
+<div id="homepage">
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- Colmena — miel, más visible -->
+    <svg class="hero-hc" viewBox="0 0 320 370" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M80 0 L160 46 L160 138 L80 184 L0 138 L0 46 Z"       stroke="#D4920A" stroke-width="1.2" fill="none"/>
+      <path d="M240 0 L320 46 L320 138 L240 184 L160 138 L160 46 Z"   stroke="#D4920A" stroke-width="1.2" fill="none"/>
+      <path d="M80 184 L160 230 L160 322 L80 368 L0 322 L0 230 Z"     stroke="#D4920A" stroke-width="1.2" fill="none"/>
+      <path d="M240 184 L320 230 L320 322 L240 368 L160 322 L160 230 Z" stroke="#D4920A" stroke-width="1.2" fill="none"/>
+      <path d="M160 92 L240 138 L240 230 L160 276 L80 230 L80 138 Z"  stroke="#E8A812" stroke-width="2" fill="rgba(212,146,10,0.07)"/>
+      <path d="M160 115 L217 147 L217 213 L160 245 L103 213 L103 147 Z" stroke="#E8A812" stroke-width="0.8" fill="none" opacity="0.5"/>
+    </svg>
+
+    <div class="hero-left">
+      <h1 class="hero-title">La<br>Colmena</h1>
+      <span class="hero-title-sub">Cine e Historia</span>
+      <a href="#" class="hero-cta" onclick="goTo('articulos');return false;">
+        Explorar artículos <span class="hero-cta-arr">→</span>
+      </a>
+    </div>
+
+    <div class="hero-right">
+      <p class="hero-stamp">La Colmena — Cine e Historia — Análisis Histórico Cinematográfico</p>
+      <div class="hero-img-wrap">
+        <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="600" fill="#231A10"/>
+          <rect x="6"   y="40"  width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="80"  width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="120" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="160" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="200" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="240" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="280" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="320" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="360" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="400" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="440" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="480" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="6"   y="520" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="40"  width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="80"  width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="120" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="160" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="200" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="240" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="280" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="320" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="360" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="400" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="440" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="480" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <rect x="384" y="520" width="10" height="16" rx="2" fill="rgba(196,169,106,0.12)"/>
+          <path d="M200 210 L240 233 L240 280 L200 303 L160 280 L160 233 Z" stroke="rgba(212,146,10,0.15)" stroke-width="1" fill="none"/>
+          <path d="M200 303 L240 326 L240 373 L200 396 L160 373 L160 326 Z" stroke="rgba(212,146,10,0.10)" stroke-width="1" fill="none"/>
+          <path d="M240 233 L280 256 L280 303 L240 326 L200 303 L200 256 Z" stroke="rgba(212,146,10,0.08)" stroke-width="1" fill="none"/>
+          <path d="M160 233 L200 256 L200 303 L160 326 L120 303 L120 256 Z" stroke="rgba(212,146,10,0.08)" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="hero-img-fade"></div>
+      </div>
+      <!-- Cita Godard -->
+      <div class="hero-quote-box">
+        <blockquote>«El cine no es un arte que filma la vida: el cine está entre el arte y la vida.»</blockquote>
+        <cite>Jean-Luc Godard</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- BAND -->
+  <div class="identity-band">
+    <span class="identity-band-item">Historia Contemporánea</span>
+    <span class="identity-dot"></span>
+    <span class="identity-band-item">Cine como Fuente</span>
+    <span class="identity-dot"></span>
+    <span class="identity-band-item">Análisis Histórico</span>
+    <span class="identity-dot"></span>
+    <span class="identity-band-item">Crítica Cultural</span>
+    <span class="identity-dot"></span>
+    <span class="identity-band-item">Perspectiva Científica</span>
+    <span class="identity-dot"></span>
+    <span class="identity-band-item">Divulgación</span>
+  </div>
+
+  <!-- EL PROYECTO -->
+  <section class="about-sec" id="sobre-el-proyecto">
+    <div class="inner">
+      <div class="sec-head">
+        <span class="sec-label">El proyecto</span>
+        <h2 class="sec-title">Historia vista a través del objetivo</h2>
+      </div>
+      <div class="about-grid">
+
+        <div class="about-photo-wrap">
+          <div class="about-photo-frame">
+            <img
+              src="https://www.meisterdrucke.es/kunstwerke/1260px/H_Brispot_-_Poster_for_the_cinematographer_of_the_brothers_Lumiere_at_the_grand_cafe_in_Dece_-_%28MeisterDrucke-1063183%29.jpg"
+              alt="Cartel publicitario del Cinematógrafo Lumière, 1895">
+          </div>
+          <svg class="hc-deco" width="90" height="90" viewBox="0 0 90 90">
+            <path d="M45 5 L85 27 L85 63 L45 85 L5 63 L5 27 Z" stroke="#A8894A" stroke-width="1" fill="none"/>
+            <path d="M45 20 L72 35 L72 55 L45 70 L18 55 L18 35 Z" stroke="#A8894A" stroke-width="0.5" fill="none"/>
+          </svg>
+          <p class="about-photo-caption">Cartel publicitario del Cinematógrafo Lumière, 1895.<br>El nacimiento de un nuevo modo de ver el mundo.</p>
+        </div>
+
+        <div class="about-text">
+          <h2>El cine como archivo<br>vivo del siglo <span style="font-variant:small-caps">xx</span></h2>
+          <p class="about-sub">Una película no es solo lo que se ve en la pantalla</p>
+
+          <p>Una película no es únicamente lo que aparece en la pantalla. Es también <strong>cuándo y dónde fue rodada</strong>, quién la hizo y por qué, en qué contexto sociopolítico y económico nació, y con qué ojos la recibieron públicos distintos en momentos distintos. Cada filme lleva impresa la huella del mundo que lo produjo, quiera reconocerlo o no.</p>
+
+          <p>El cine llegó al mundo en 1895 como un espectáculo de feria y en pocas décadas se convirtió en el espejo más fiel que las sociedades contemporáneas han tenido de sí mismas. <strong>Ningún otro medio ha captado con tanta precisión los miedos, los deseos, las contradicciones y los silencios de una época.</strong> La cámara no solo registra la realidad: la interpreta, la construye, a veces la distorsiona deliberadamente. Y todo eso es historia.</p>
+
+          <p>Estudiar cine desde una perspectiva histórica significa preguntarse qué nos dice una película sobre la sociedad que la creó. Significa leer entre líneas la censura que sufrió, las conversaciones que generó, los tabúes que rozó o ignoró. <em>Significa tratarla como lo que es: un documento de primer orden.</em> No un documento neutral, sino uno especialmente rico en capas de significado, contexto e intención.</p>
+
+          <p>Este espacio nace de la convicción de que el cine es, ante todo, un elemento en el que las sociedades humanas se pueden ver reflejadas. Y que conocer esa imagen es conocernos un poco mejor. Con el rigor de la historiografía y con la voluntad de que cualquiera, con o sin formación académica, pueda acompañar ese recorrido.</p>
+
+          <div class="author-sig">
+            <span class="author-sig-line"></span>
+            <span class="author-sig-text"><strong>Sandra Fernández Domínguez</strong> — Historiadora, especialista en Historia Contemporánea</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTÍCULOS -->
+  <section class="articles-sec" id="articulos">
+    <div class="inner">
+      <div class="sec-head">
+        <span class="sec-label">Artículos</span>
+        <h2 class="sec-title">Análisis publicados</h2>
+      </div>
+      <div class="articles-grid">
+
+        <a class="art-card" href="#" onclick="showArticle('espiritu');return false;">
+          <img class="art-card-img"
+            src="https://images.mubicdn.net/images/film/367/cache-90963-1745491862/image-w1280.jpg">
+          <div class="art-card-body">
+            <div class="art-meta">
+              <span class="art-cat">Cine Español · Nueva Ola</span>
+              <span class="art-year">Erice, 1973</span>
+            </div>
+            <h3>«Vamos a contar mentiras...»: El espíritu de la colmena como relato de la inocencia en tiempos oscuros</h3>
+            <span class="art-film">El espíritu de la colmena — Víctor Erice, 1973</span>
+            <p>La película que da nombre a este espacio. Una obra que sorteó la censura franquista convirtiendo la mirada infantil en el acto más subversivo posible en la España de posguerra.</p>
+            <span class="art-more">Leer análisis <span class="art-more-arr">→</span></span>
+          </div>
+        </a>
+
+        <a class="art-card" href="#" onclick="showArticle('comedia');return false;">
+          <img class="art-card-img-ignatius"
+            src="https://m.media-amazon.com/images/S/pv-target-images/4efc8e31132a0d24165d52c317c96b1ff823797980f0ab196edef01fdf895545.jpg">
+          <div class="art-card-body">
+            <div class="art-meta">
+              <span class="art-cat">Series · Comedia Dramática</span>
+              <span class="art-year">Farray, 2014</span>
+            </div>
+            <h3>«¡Ridi Pagliaccio!»: El fin de la comedia y la tragedia del personaje que devora al hombre</h3>
+            <span class="art-film">El fin de la comedia — J.I. Delgado Alemany, M. Esteban y R. Navarro, 2014</span>
+            <p>Nominada a los Emmy internacionales. Su drama se construye en el espacio que separa al cómico del hombre que lo habita: un retrato generacional de singular lucidez.</p>
+            <span class="art-more">Leer análisis <span class="art-more-arr">→</span></span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFIESTO -->
+  <section class="manifesto-sec" id="manifiesto">
+    <div class="manifesto-inner">
+      <p class="manifesto-kicker">La Colmena — Cine e Historia</p>
+      <p class="manifesto-body">
+        Este es un espacio donde <strong>la historia y el cine se leen juntos</strong>, como siempre debieron leerse. El cine no es un ornamento de la historia: es uno de sus documentos más complejos y más honestos. Cada película que se ha proyectado en el mundo ha dejado una huella en quienes la vieron, en cómo pensaron, en lo que temieron, en lo que soñaron. <strong>Estudiar esas huellas es estudiar a las personas.</strong> Y estudiar a las personas es, al fin y al cabo, el único propósito real de la historia.
+      </p>
+      <p class="manifesto-footer">
+        La perspectiva es la de la historiografía: rigurosa, contextualizada, crítica con sus propias fuentes.<br>
+        El lenguaje es el de quien cree que el conocimiento no debería tener puertas cerradas.
+      </p>
+    </div>
+  </section>
+
+</div><!-- /homepage -->
+
+
+<!-- ═══════════ ARTÍCULO 1 ═══════════ -->
+<div id="article-espiritu" class="art-page">
+<div class="art-inner">
+  <button class="back-btn" onclick="showHome()">← Volver a La Colmena</button>
+  <div class="art-hdr">
+    <p class="art-hdr-cat">Cine Español · Tardofranquismo · Nueva Ola</p>
+    <h1>«Vamos a contar mentiras...»:<br>El espíritu de la colmena como relato de la inocencia en tiempos oscuros</h1>
+    <p class="art-hdr-film">El espíritu de la colmena — dir. Víctor Erice, 1973</p>
+  </div>
+  <img class="art-hero-img"
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/El_espiritu_de_la_colmena_original_poster.jpg/640px-El_espiritu_de_la_colmena_original_poster.jpg"
+    alt="Cartel original de El espíritu de la colmena, 1973"
+    onerror="this.style.display='none'">
+  <p class="art-img-cap">Cartel original de <em>El espíritu de la colmena</em> (1973). Ganadora de la Concha de Oro en el Festival Internacional de Cine de San Sebastián.</p>
+  <div class="info-box">
+    <h4>Ficha técnica</h4>
+    <ul>
+      <li><strong>Dirección</strong> Víctor Erice</li>
+      <li><strong>Año</strong> 1973</li>
+      <li><strong>País</strong> España</li>
+      <li><strong>Guión</strong> Ángel Fernández Santos y Víctor Erice</li>
+      <li><strong>Fotografía</strong> Luis Cuadrado</li>
+      <li><strong>Ambientación</strong> Castilla, años 40, posguerra</li>
+      <li><strong>Contexto</strong> Tardofranquismo · Nueva Ola Española</li>
+      <li><strong>Premio</strong> Concha de Oro, San Sebastián 1973</li>
+    </ul>
+  </div>
+  <div class="art-body">
+    <p>La primera entrada de este blog está destinada, evidentemente, a la película que inspiró su nombre. <strong>El espíritu de la colmena</strong> ocupa un puesto ineludible en el canon del cine español. Una película impactante, dramática y, en cierta medida, triste, pero con una belleza absolutamente acaparadora. Esta obra está caracterizada por su profunda simbología en un contexto histórico de una complejidad extraordinaria.</p>
+    <p>Su director supo sortear con astucia la censura franquista a través de una interpretación metafórica sobre la inocencia en una España corrompida por el terror y la incertidumbre. Y hay una anécdota que ilustra este juego de espejos con una precisión devastadora: los censores que visionaron la película afirmaron despreocupados que <em>«no la vería nadie»</em>. Error de cálculo monumental.</p>
+    <p>Esta película está enmarcada dentro de la <strong>Nueva Ola del Cine Español</strong>, publicada en 1973 durante el tardofranquismo, aunque ambientada en la España de los años 40, completamente devastada por la guerra. Los primeros minutos nos proyectan a una vocera anunciando la proyección de <em>Frankenstein</em> en un pequeño pueblo castellano. Con este gesto inaugural, Erice declara su fe: el cine importa, el cine transforma, el cine es ya un hecho histórico antes de que nadie lo estudie como tal.</p>
+  </div>
+  <div class="pull">
+    <blockquote>«Soy Ana. Soy Ana.»</blockquote>
+    <cite>Ana Torrent en El espíritu de la colmena — la afirmación de identidad como primer acto de resistencia posible</cite>
+  </div>
+  <div class="stills">
+    <div class="still"><div style="width:100%;height:100%;min-height:210px;background:#2C2018;display:flex;align-items:center;justify-content:center;"><p class="still-ph">Fotograma —<br>Ana observa la proyección<br>de <em>El doctor Frankenstein</em></p></div><div class="still-label"><span>La sala como umbral entre mundos</span></div></div>
+    <div class="still"><div style="width:100%;height:100%;min-height:210px;background:#1A1612;display:flex;align-items:center;justify-content:center;"><p class="still-ph">Fotograma —<br>La colmena<br>y su orden aparente</p></div><div class="still-label"><span>La metáfora del estado</span></div></div>
+    <div class="still"><div style="width:100%;height:100%;min-height:210px;background:#231E17;display:flex;align-items:center;justify-content:center;"><p class="still-ph">Fotograma —<br>La llanura<br>castellana</p></div><div class="still-label"><span>Paisaje como estado anímico</span></div></div>
+  </div>
+  <p class="stills-cap">La fotografía de Luis Cuadrado convierte la llanura castellana en un espacio de desolación poética. Cada encuadre es, también, una elección ideológica.</p>
+  <div class="art-body">
+    <h2>1. El miedo a través de la mirada infantil</h2>
+    <p>Erice construye toda su arquitectura narrativa sobre los ojos de una niña. Ana, interpretada por una extraordinaria <strong>Ana Torrent</strong> con apenas seis años, carga con el peso de una España que no comprende pero que intuye como hostil. La cámara no explica: observa. Y en esa observación hay más denuncia que en cualquier panfleto.</p>
+    <p>La elección de la infancia como punto de vista no es inocente. El niño que no entiende las reglas del mundo adulto es el único capaz de verlas con claridad. En una dictadura donde el silencio era ley, Erice convierte la mirada ingenua en el instrumento más subversivo disponible. Los censores, que esperaban encontrar consignas explícitas, se perdieron el mensaje porque estaba escrito en un idioma que no sabían leer: el idioma de la imagen pura.</p>
+    <p>La relación de Ana con el monstruo de Frankenstein es, en este sentido, paradigmática. El monstruo que da lástima, el monstruo rechazado por todos, el monstruo que no pidió existir: no es difícil encontrar en esa figura una alegoría de todos aquellos a quienes el régimen había decidido que no pertenecían a la nueva España. Erice no lo dice. Lo muestra. Y lo muestra a través de los ojos de alguien que todavía no sabe que hay cosas que no se pueden mirar.</p>
+  </div>
+  <div class="pull">
+    <blockquote>«El espíritu de la colmena no habla del miedo que se siente: habla del miedo que se aprende.»</blockquote>
+    <cite>La Colmena — Cine e Historia</cite>
+  </div>
+  <div class="art-body">
+    <h2>2. El silencio y la metáfora como lenguaje político</h2>
+  </div>
+  <div class="in-progress">
+    <p>✦ &nbsp; Esta sección está actualmente en proceso de redacción. El análisis continuará con el estudio del silencio como herramienta de resistencia y la metáfora de la colmena como representación del estado totalitario. &nbsp; ✦</p>
+  </div>
+  <div class="fig-full">
+    <div class="fig-full-inner"><p class="fig-ph">Fotograma de la secuencia final —<br>Ana frente a la noche castellana,<br>invocando al espíritu</p></div>
+    <p class="fig-cap">La secuencia final funciona como síntesis poética de todo lo anterior: Ana, sola, abriendo los brazos hacia un espíritu que solo ella puede invocar. La resistencia como acto íntimo e intransferible.</p>
+  </div>
+  <div class="art-sig">
+    <span class="art-sig-label">Texto</span>
+    <span class="art-sig-name"><strong>Sandra Fernández Domínguez</strong> — Historiadora, especialista en Historia Contemporánea</span>
+  </div>
+</div>
+</div>
+
+
+<!-- ═══════════ ARTÍCULO 2 ═══════════ -->
+<div id="article-comedia" class="art-page">
+<div class="art-inner">
+  <button class="back-btn" onclick="showHome()">← Volver a La Colmena</button>
+  <div class="art-hdr">
+    <p class="art-hdr-cat">Series · Comedia Dramática · Cine Contemporáneo Español</p>
+    <h1>«¡Ridi Pagliaccio!»:<br>El fin de la comedia y la tragedia del personaje que devora al hombre</h1>
+    <p class="art-hdr-film">El fin de la comedia — Juan I. Delgado Alemany, Miguel Esteban y Raúl Navarro, 2014</p>
+  </div>
+  <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(160deg,#2C2018 0%,#1A1612 60%,#231A10 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;margin:2.5rem 0 0;position:relative;overflow:hidden;">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.06" viewBox="0 0 800 450"><circle cx="400" cy="225" r="180" stroke="#D4920A" stroke-width="1" fill="none"/><circle cx="400" cy="225" r="120" stroke="#D4920A" stroke-width="0.5" fill="none"/><path d="M400 45 L220 225 L400 405 L580 225 Z" stroke="#D4920A" stroke-width="0.5" fill="none"/></svg>
+    <p style="color:rgba(196,169,106,0.5);font-family:'Playfair Display',serif;font-style:italic;font-size:1.5rem;position:relative;z-index:1;">El fin de la comedia</p>
+    <p style="color:rgba(196,169,106,0.22);font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;position:relative;z-index:1;">Movistar+ · Noviembre 2014</p>
+  </div>
+  <p class="art-img-cap">Imagen de presentación de <em>El fin de la comedia</em> (Movistar+, 2014). Nominada a los International Emmy Awards en la categoría de Comedia.</p>
+  <div class="info-box">
+    <h4>Ficha técnica</h4>
+    <ul>
+      <li><strong>Creación</strong> J.I. Delgado, M. Esteban, R. Navarro</li>
+      <li><strong>Año</strong> 2014</li>
+      <li><strong>País</strong> España</li>
+      <li><strong>Plataforma</strong> Movistar+</li>
+      <li><strong>Protagonista</strong> Ignatius Farray</li>
+      <li><strong>Género</strong> Comedia dramática</li>
+      <li><strong>Reconocimiento</strong> Nominación International Emmy Awards</li>
+      <li><strong>Contexto</strong> Auge de la comedia española contemporánea</li>
+    </ul>
+  </div>
+  <div class="art-body">
+    <p>Nunca es tarde para rescatar de las entrañas del olvido a la serie que vivió el éxito de lo efímero, como aquellos grupos de música de los 80 que explotaban con una canción pero que rápidamente fueron olvidados. <strong>El fin de la comedia</strong> quizá triunfó fugazmente gracias al impacto que entonces tenía <em>La vida moderna</em>, programa que cambió la historia de la radio española, pero no podemos olvidar su nominación a los premios Emmy internacionales.</p>
+    <p>Esta serie fue creada por Juan Ignacio Delgado Alemany, Miguel Esteban y Raúl Navarro y vio la luz en noviembre de 2014. Se presenta como una comedia dramática y, al revisarla hoy, resulta llamativa la hondura de su tristeza: <strong>es triste como solo puede serlo la comedia construida a partir de la verdad</strong>.</p>
+  </div>
+  <div class="pull">
+    <blockquote>«Cuando en el mundo aparece un verdadero genio, puede identificársele por este signo: todos los necios se conjuran contra él.»</blockquote>
+    <cite>Jonathan Swift — cita que abre La conjura de los necios (John Kennedy Toole, 1980), novela que inspiró el nombre artístico de Ignatius Farray</cite>
+  </div>
+  <div class="stills">
+    <div class="still"><div style="width:100%;height:100%;min-height:210px;background:#2C2018;display:flex;align-items:center;justify-content:center;"><p class="still-ph">Fotograma —<br>Ignatius en el escenario<br>El territorio del personaje</p></div><div class="still-label"><span>El hombre que brilla</span></div></div>
+    <div class="still"><div style="width:100%;height:100%;min-height:210px;background:#1A1612;display:flex;align-items:center;justify-content:center;"><p class="still-ph">Fotograma —<br>Juan Ignacio<br>fuera del escenario</p></div><div class="still-label"><span>El hombre que se apaga</span></div></div>
+    <div class="still"><div style="width:100%;height:100%;min-height:210px;background:#231E17;display:flex;align-items:center;justify-content:center;"><p class="still-ph">Fotograma —<br>La dualidad<br>personaje / persona</p></div><div class="still-label"><span>¿Dónde está la ficción?</span></div></div>
+  </div>
+  <p class="stills-cap">La serie construye su tensión dramática en el espacio que separa al hombre del personaje. Ese espacio es, en realidad, todo el argumento.</p>
+  <div class="art-body">
+    <p>El protagonista y co-creador de esta serie es un genio disfrazado de cómico, capaz de transformar profundas reflexiones, traumas, miedos y dolor en risas que brotan de lo más profundo del corazón. <strong>Juan Ignacio Delgado Alemany</strong>, mejor conocido como Ignatius Farray, es un auténtico personaje que merece brillar en la memoria de la historia de este país. Su papel transformador es reflejo de una época: es la voz de toda una generación que no se atrevió, la más cruda expresión de la lucha antagónica entre la libertad de ser y el miedo.</p>
+    <p>Ignatius apareció lanzando un mensaje que su propia historia fue escribiendo solo: narraba su vida con humor para huir del caos que provocan sus propias acciones. Él crecía como cómico pero Juan Ignacio moría como persona. Esta es la verdadera esencia de la serie: la capacidad de captar ficciones que traspasan los límites entre ella y la realidad. Observar la serie y preguntarse, si eres seguidor del cómico: <em>¿quién es el personaje? ¿dónde está la ficción?</em></p>
+  </div>
+  <div class="pull">
+    <blockquote>«Él crecía como cómico, pero Juan Ignacio moría como persona.»</blockquote>
+    <cite>La Colmena — Cine e Historia</cite>
+  </div>
+  <div class="art-body">
+    <p>En distintas ocasiones Ignatius ha contado el origen de su nombre, que hace referencia al protagonista de la novela póstuma de <strong>John Kennedy Toole</strong>, <em>La conjura de los necios</em> (1980). Esta obra comienza con una cita atribuida al escritor satírico irlandés Jonathan Swift, conocido por <em>Los viajes de Gulliver</em> (1726): cuando en el mundo aparece un verdadero genio, puede identificársele porque todos los necios se conjuran contra él. Quizá fue la casualidad; quizá ese libro lo marcó tanto que asumió irracionalmente cada una de sus palabras. Pero esa frase, hoy, es Ignatius Farray.</p>
+    <p><strong>El fin de la comedia</strong> cuenta la historia dramática de una persona que se desvive por brillar en los escenarios pero que, cada vez que lo hace, se apaga un poco más fuera de ellos. Narra la construcción, a base de palos, de un personaje que brilla sin quererlo; crítico e injusto consigo mismo pero, a la vez, vanidoso y con sed de protagonismo. Ignatius Farray es el resultado de esa construcción antagónica que contradice la naturaleza de Juan Ignacio. Este proceso es el verdadero argumento de la serie, lo que la consagra como una obra profundamente dramática a la par de divertida.</p>
+    <p><em>El fin de la comedia</em> es la materialización audiovisual de la compleja mentalidad de Juan Ignacio: antagónica y contradictoria. Y, precisamente por eso, <strong>absolutamente humana</strong>.</p>
+  </div>
+  <div class="fig-full">
+    <div class="fig-full-inner"><p class="fig-ph" style="font-size:1rem;">«¡Ridi, Pagliaccio, sul tuo amore infranto!»<br><br><span style="font-size:0.85rem;opacity:0.65">Ruggero Leoncavallo, <em>Pagliacci</em> (1892)<br>«¡Ríe, payaso, de tu amor roto!»</span></p></div>
+    <p class="fig-cap">El título hace referencia al aria más célebre de la ópera <em>Pagliacci</em> de Leoncavallo (1892). La comedia como máscara obligatoria; el llanto como verdad oculta. Una metáfora que Ignatius Farray encarna con una naturalidad que incomoda precisamente porque no parece actuada.</p>
+  </div>
+  <div class="art-sig">
+    <span class="art-sig-label">Texto</span>
+    <span class="art-sig-name"><strong>Sandra Fernández Domínguez</strong> — Historiadora, especialista en Historia Contemporánea</span>
+  </div>
+</div>
+</div>
+
+<div class="filmstrip"></div>
+
+<footer>
+  <div class="footer-brand">
+    <span class="footer-name">La Colmena</span>
+    <span class="footer-tagline">Cine e Historia</span>
+  </div>
+  <div class="footer-right">
+    <p class="footer-sig">Un espacio creado y escrito por<br><strong>Sandra Fernández Domínguez</strong></p>
+    <p class="footer-note">Historiadora · Especialista en Historia Contemporánea</p>
+  </div>
+</footer>
+
+<script>
+  function showArticle(id){
+    document.getElementById('homepage').style.display='none';
+    document.querySelectorAll('.art-page').forEach(p=>p.classList.remove('active'));
+    const el=document.getElementById('article-'+id);
+    if(el){el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  }
+  function showHome(){
+    document.getElementById('homepage').style.display='block';
+    document.querySelectorAll('.art-page').forEach(p=>p.classList.remove('active'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function goTo(id){
+    const el=document.getElementById(id);
+    if(el)el.scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
